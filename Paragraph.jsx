@@ -6,7 +6,7 @@ const Paragraph = ({ setText }) => {
   return (
     <View style={paragraphStyle.container}>
       <TextInput 
-        style={paragraphStyle.input}
+        style={paragraphStyle.input} 
         placeholderTextColor="#222"
         multiline={true}
         textAlignVertical='top'
