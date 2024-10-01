@@ -10,7 +10,7 @@ const Paragraph = ({ setText }) => {
         placeholderTextColor="#222"
         multiline={true}
         textAlignVertical='top'
-        onChangeText={setText}
+        onChangeText={setText} 
       />
       <Text style={paragraphStyle.aiText}>Your AI assistant.</Text>
       <TextInput 
