@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import documentStyle from '../style/DocumentStyle';
 import Header from '../component/Header';
 import Paragraph from '../component/Paragraph';
+import Edit from '../component/Edit'; // Import Edit.jsx
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Document = ({ navigation }) => {
   const [text, setText] = useState('');
+  const [textStyle, setTextStyle] = useState({ fontSize: 16, color: '#000', textAlign: 'left' });
 
   useEffect(() => {
     navigation.setOptions({
@@ -29,7 +31,8 @@ const Document = ({ navigation }) => {
   return (
     <View style={documentStyle.container}>
       <Header title="Document" onSave={handleSave} />
-      <Paragraph setText={setText} />
+      <Paragraph setText={setText} textStyle={textStyle} />
+      <Edit setTextStyle={setTextStyle} />
     </View>
   );
 };

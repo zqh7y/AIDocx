@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 export default function App() {
   const [fontsLoaded] = useFonts({
     "Pac": require('./font/Pac.ttf'),
-    "Kan": require('./font/Kan.ttf'),
+    "Kan": require('./font/Kan.ttf'), 
   })
 
   if (!fontsLoaded) return null;
