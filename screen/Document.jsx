@@ -31,8 +31,8 @@ const Document = ({ navigation }) => {
   return (
     <View style={documentStyle.container}>
       <Header title="Document" onSave={handleSave} />
-      <Paragraph setText={setText} textStyle={textStyle} />
       <Edit setTextStyle={setTextStyle} />
+      <Paragraph setText={setText} textStyle={textStyle} />
     </View>
   );
 };

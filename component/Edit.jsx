@@ -1,89 +1,106 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TouchableOpacity, Image, Text } from 'react-native';
 import EditStyle from '../style/EditStyle';
+import { Entypo } from '@expo/vector-icons';
 
 const Edit = ({ setTextStyle }) => {
-  const [textSize, setTextSize] = useState(16);
+  const [textSize, setTextSize] = useState(14);
   const [textColor, setTextColor] = useState('#000');
-  const [textAlign, setTextAlign] = useState('left');
-  const [isBold, setIsBold] = useState(false);
-  const [isItalic, setIsItalic] = useState(false);
+  const [textAlign, setTextAlign] = useState('left'); // Default alignment set to 'left'
+
+  const [showColorOptions, setShowColorOptions] = useState(false);
 
   const applyTextStyle = () => {
     setTextStyle({
       fontSize: textSize,
       color: textColor,
       textAlign,
-      fontWeight: isBold ? 'bold' : 'normal',
-      fontStyle: isItalic ? 'italic' : 'normal',
     });
   };
 
   const changeTextSize = (delta) => {
-    setTextSize((prevSize) => {
-      const newSize = Math.min(Math.max(prevSize + delta, 8), 30);
-      applyTextStyle(); // Call applyTextStyle after size change
-      return newSize;
-    });
-  };
-
-  const handleTextAlignChange = (alignment) => {
-    setTextAlign(alignment); // Update alignment state
-    // Apply the text style immediately upon button press
-    applyTextStyle(); 
+    const newSize = Math.min(Math.max(textSize + delta, 8), 30);
+    setTextSize(newSize);
+    applyTextStyle();
   };
 
   const colorGrid = [
-    '#000000', '#999999', '#ff7f00', '#0000ff', 
+    '#000000', '#999999', '#ff7f00', '#0000ff',
     '#4b0082', '#9400d3', '#ff0000', '#ff1493',
   ];
 
+  const handleAlignChange = (alignment) => {
+    setTextAlign(alignment);
+    applyTextStyle();
+  };
+
+  useEffect(() => {
+    applyTextStyle(); // Apply text styles on component mount
+  }, []);
+
   return (
     <View style={EditStyle.container}>
-      <Text style={EditStyle.label}>Text Settings</Text>
-      <View style={EditStyle.sizeRow}>
-        <TouchableOpacity onPress={() => changeTextSize(-1)}>
-          <Text style={EditStyle.sizeSymbol}>−</Text>
-        </TouchableOpacity>
-        <Text style={EditStyle.sizeText}>{textSize}px</Text>
-        <TouchableOpacity onPress={() => changeTextSize(1)}>
-          <Text style={EditStyle.sizeSymbol}>+</Text>
-        </TouchableOpacity>
-        <View style={EditStyle.textStyleOptions}>
-          <TouchableOpacity onPress={() => { 
-            setIsBold((prev) => !prev); 
-            applyTextStyle(); 
-          }} style={[EditStyle.styleButton, isBold && EditStyle.selectedStyle]}>
-            <Text style={EditStyle.styleText}>BOLD</Text>
+      <View style={EditStyle.editRow}>
+        <TouchableOpacity 
+          onPress={() => setShowColorOptions((prev) => !prev)} 
+          style={[EditStyle.colorDisplay, { backgroundColor: textColor }]} 
+        >
+          <Text>{showColorOptions ? <Entypo name="cross" size={20} color="white" /> : ''}</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => { 
-            setIsItalic((prev) => !prev); 
-            applyTextStyle(); 
-          }} style={[EditStyle.styleButton, isItalic && EditStyle.selectedStyle]}>
-            <Text style={EditStyle.styleText}>ITALIC</Text>
+        <View style={EditStyle.sizeControls}>
+          <TouchableOpacity onPress={() => changeTextSize(-1)} style={EditStyle.sizeButton}>
+            <Text style={EditStyle.sizeText}>−</Text>
+          </TouchableOpacity>
+          <Text>{textSize}</Text>
+          <TouchableOpacity onPress={() => changeTextSize(1)} style={EditStyle.sizeButton}>
+            <Text style={EditStyle.sizeText}>+</Text>
           </TouchableOpacity>
         </View>
-        <View style={EditStyle.alignRow}>
-          <TouchableOpacity onPress={() => handleTextAlignChange('left')} style={[EditStyle.alignButton, textAlign === 'left' && { borderColor: '#d9d9d9', borderWidth: 1 }]}>
-            <Image source={require('../image/left2.jpeg')} style={EditStyle.alignIcon} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleTextAlignChange('center')} style={[EditStyle.alignButton, textAlign === 'center' && { borderColor: '#d9d9d9', borderWidth: 1 }]}>
-            <Image source={require('../image/center.png')} style={EditStyle.alignIcon} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleTextAlignChange('right')} style={[EditStyle.alignButton, textAlign === 'right' && { borderColor: '#d9d9d9', borderWidth: 1 }]}>
-            <Image source={require('../image/right2.png')} style={EditStyle.alignIcon} />
-          </TouchableOpacity>
+
+        <TouchableOpacity style={EditStyle.alignDisplay}>
+          {textAlign === 'left' && <Image source={require('../image/left2.jpeg')} style={EditStyle.alignIcon} />}
+          {textAlign === 'center' && <Image source={require('../image/center.png')} style={EditStyle.alignIcon} />}
+          {textAlign === 'right' && <Image source={require('../image/right2.png')} style={EditStyle.alignIcon} />}
+        </TouchableOpacity>
+      </View>
+
+      {/* Always show alignment options */}
+      <View style={EditStyle.alignOptions}>
+        <TouchableOpacity 
+          onPress={() => handleAlignChange('left')} 
+          style={[EditStyle.alignButton, textAlign === 'left' && { borderColor: '#000', borderWidth: 2 }]}
+        >
+          <Image source={require('../image/left2.jpeg')} style={EditStyle.alignIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity 
+          onPress={() => handleAlignChange('center')} 
+          style={[EditStyle.alignButton, textAlign === 'center' && { borderColor: '#000', borderWidth: 2 }]}
+        >
+          <Image source={require('../image/center.png')} style={EditStyle.alignIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity 
+          onPress={() => handleAlignChange('right')} 
+          style={[EditStyle.alignButton, textAlign === 'right' && { borderColor: '#000', borderWidth: 2 }]}
+        >
+          <Image source={require('../image/right2.png')} style={EditStyle.alignIcon} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Color options */}
+      {showColorOptions && (
+        <View style={EditStyle.colorOptions}>
+          {colorGrid.map((color, index) => (
+            <TouchableOpacity 
+              key={index} 
+              onPress={() => { 
+                setTextColor(color); 
+                applyTextStyle(); 
+              }} 
+              style={[EditStyle.colorButton, { backgroundColor: color }]} 
+            />
+          ))}
         </View>
-      </View>
-      <Text style={EditStyle.label}>Select Color:</Text>
-      <View style={EditStyle.colorGrid}>
-        {colorGrid.map((color, index) => (
-          <TouchableOpacity key={index} onPress={() => {
-            setTextColor(color);
-            applyTextStyle();
-          }} style={[EditStyle.colorButton, { backgroundColor: color }]} />
-        ))}
-      </View>
+      )}
     </View>
   );
 };
